@@ -1,6 +1,8 @@
-import geojson
 import operator
 
+import geocoder
+import geojson
+import geopandas as gpd
 import osm2geojson
 import pandas
 import pydeck
@@ -13,10 +15,7 @@ from osmnx.downloader import (
 )
 from pydeck.data_utils.viewport_helpers import compute_view
 from shapely.geometry import shape
-
-from commands.geocoder import geocode
-import geopandas as gpd
-from st_aggrid import GridOptionsBuilder, AgGrid, GridUpdateMode, DataReturnMode
+from st_aggrid import AgGrid, DataReturnMode, GridOptionsBuilder, GridUpdateMode
 
 settings.timeout = 10
 
@@ -26,7 +25,14 @@ col1, col2 = st.columns(2)
 
 with col1:
     envelope = (
-        shape(geocode(st.text_input("City", "Auckland, New Zealand")))
+        shape(
+            geojson.Point(
+                geocoder.mapbox(
+                    st.text_input("City", "Auckland, New Zealand"),
+                    key=st.secrets.get("MAPBOX_API_KEY"),
+                ).latlng[::-1]
+            )
+        )
         .buffer(st.slider("Buffer Km", 0.5, 10.0, 3.0) / 2 / 111111.0 * 1000)
         .envelope
     )

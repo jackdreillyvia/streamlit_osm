@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "streamlit_osm"
+version = "0.1.0"
+description = ""
+authors = ["Jack Reilly <jack@vianova.io>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+streamlit = "^1.8.1"
+geocoder = "^1.38.1"
+geopandas = "^0.10.2"
+osm2geojson = "^0.1.33"
+pandas = "^1.4.2"
+pydeck = "^0.7.1"
+osmnx = "^1.1.2"
+Shapely = "^1.8.1"
+streamlit-aggrid = "^0.2.3"
+
+[tool.poetry.dev-dependencies]
+black = "^22.3.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
