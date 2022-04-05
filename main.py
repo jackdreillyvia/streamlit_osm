@@ -1,3 +1,4 @@
+import logging
 import operator
 
 import geocoder
@@ -17,13 +18,26 @@ from pydeck.data_utils.viewport_helpers import compute_view
 from shapely.geometry import shape
 from st_aggrid import AgGrid, DataReturnMode, GridOptionsBuilder, GridUpdateMode
 
-settings.timeout = 10
-
 st.set_page_config(layout="wide")
+
+settings.timeout = 10
+settings.log_console = True
+settings.log_level = logging.DEBUG
+
 
 col1, col2 = st.columns(2)
 
 with col1:
+    settings.overpass_endpoint = st.selectbox(
+        "Select Overpass Endpoint",
+        [
+            "https://overpass.kumi.systems/api/",
+            "https://overpass-api.de/api/",
+        ],
+    )
+    settings.overpass_rate_limit = (
+        settings.overpass_endpoint == "https://overpass-api.de/api/"
+    )
     envelope = (
         shape(
             geojson.Point(
@@ -64,8 +78,8 @@ with col1:
                 v := st.selectbox(
                     "Templates",
                     {
-                        "Roads": "way[highway]",
                         "Bus Stops": "node[bus=yes]",
+                        "Roads": "way[highway]",
                         "Admin Boundaries": "relation[admin_level]",
                         "Rail": "way[railway]",
                     }.items(),
